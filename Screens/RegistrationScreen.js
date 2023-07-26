@@ -115,6 +115,7 @@ const styles = StyleSheet.create({
   },
   textButton: {
     fontSize: 16,
+    color: "#FFF",
   },
   verifyButton: {
     position: "absolute",
