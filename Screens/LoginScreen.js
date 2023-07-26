@@ -8,6 +8,7 @@ import {
   TextInput,
   TouchableOpacity,
   Pressable,
+  KeyboardAvoidingView,
 } from "react-native";
 
 import image from "./Images/bg_photo.jpg";
@@ -24,19 +25,22 @@ const LoginScreen = () => {
         resizeMode="cover"
         style={styles.imgBackGround}
       >
+        {/* <KeyboardAvoidingView style={styles.contain} behavior="padding"> */}
         <View style={styles.container}>
           <Text style={styles.header}>Увійти</Text>
 
-          <TextInput
-            style={styles.input}
-            placeholder="Адреса електронної пошти"
-          />
-
           <View>
-            <TextInput style={styles.input} placeholder="Пароль" />
-            <Pressable style={styles.verifyButton}>
-              <Text>Показати</Text>
-            </Pressable>
+            <TextInput
+              style={styles.input}
+              placeholder="Адреса електронної пошти"
+            />
+
+            <View>
+              <TextInput style={styles.input} placeholder="Пароль" />
+              <Pressable style={styles.verifyButton}>
+                <Text>Показати</Text>
+              </Pressable>
+            </View>
           </View>
 
           <View style={styles.styleRegistrBtn}>
@@ -52,6 +56,7 @@ const LoginScreen = () => {
           </Text>
           <HomeIndicator />
         </View>
+        {/* </KeyboardAvoidingView> */}
       </ImageBackground>
     </SafeAreaView>
   );
@@ -59,11 +64,15 @@ const LoginScreen = () => {
 export default LoginScreen;
 
 const styles = StyleSheet.create({
+  contain: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     display: "flex",
     position: "absolute",
 
+    // marginTop: 323,
     bottom: 0,
 
     alignItems: "center",
@@ -111,6 +120,7 @@ const styles = StyleSheet.create({
   },
   login: {
     marginBottom: 111,
+
     color: "#1B4371",
     fontSize: 16,
   },
