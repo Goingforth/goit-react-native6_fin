@@ -1,77 +1,125 @@
-// import { StatusBar } from "expo-status-bar";
-// import { StyleSheet, Text, View, ImageBackground, Image } from "react-native";
-// const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
-// // export default function RegistrationScreen() {
-// //   return (
-// //     <View style={styles.container}>
-// //       <ImageBackground
-// //         // source={require("./Images/pg_photo.png")}
-// //         source={image}
-// //         resizeMode="cover"
-// //         style={styles.image}
-// //       ></ImageBackground>
+import {
+  ImageBackground,
+  SafeAreaView,
+  StyleSheet,
+  Dimensions,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+  Pressable,
+} from "react-native";
 
-// //       <Text>test fsdfsdfdsfdsf</Text>
-// //     </View>
-// //   );
-// // }
-// const RegistrationScreen = () => (
-//   <View style={styles.container}>
-//     <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-//       <Text style={styles.text}>Inside</Text>
-//     </ImageBackground>
-//   </View>
-// );
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//   },
-//   image: {
-//     flex: 1,
-//     justifyContent: "center",
-//   },
-// });
-// export default RegistrationScreen;
-import React from "react";
-import { ImageBackground, StyleSheet, Text, View, Image } from "react-native";
 import image from "./Images/bg_photo.jpg";
+import HomeIndicator from "../Components/HomeIndicators/HomeIndicator";
 
-//const image = { uri: "https://legacy.reactjs.org/logo-og.png" };
+const screenHeight = Dimensions.get("window").height;
+const screenWidth = Dimensions.get("window").width;
 
-const RegistrationScreen = () => (
-  <View style={styles.container}>
-    <ImageBackground source={image} resizeMode="cover" style={styles.image}>
-      <Text style={styles.text}>Inside</Text>
-    </ImageBackground>
-  </View>
-  //   <View>
-  //     <Image
-  //       source={require("./Images/bg_photo.jpg")}
-  //       style={{ position: "absolute", zIndex: -1 }}
-  //     />
+const RegistrationScreen = () => {
+  return (
+    <SafeAreaView>
+      <ImageBackground
+        source={image}
+        resizeMode="cover"
+        style={styles.imgBackGround}
+      >
+        <View style={styles.container}>
+          <Text style={styles.header}>Реєстрація</Text>
+          <TextInput style={styles.input} placeholder="Логін" />
+          <TextInput
+            style={styles.input}
+            placeholder="Адреса електронної пошти"
+          />
 
-  //     <View style={{ flex: 1, position: "absolute" }}>
-  //       <Text>fdffdsffdsfdsfdsfdsfdsf</Text>
-  //     </View>
-  //   </View>
-);
+          <View>
+            <TextInput style={styles.input} placeholder="Пароль" />
+            <Pressable style={styles.verifyButton}>
+              <Text>Показати</Text>
+            </Pressable>
+          </View>
+
+          <View style={styles.styleRegistrBtn}>
+            <TouchableOpacity>
+              {/* onPress={this.onPressButton} */}
+              <Text style={styles.textButton}>Зареєстуватися</Text>
+            </TouchableOpacity>
+          </View>
+
+          <Text style={styles.login}>Вже є акаунт? Увійти</Text>
+          <HomeIndicator />
+        </View>
+      </ImageBackground>
+    </SafeAreaView>
+  );
+};
+export default RegistrationScreen;
 
 const styles = StyleSheet.create({
   container: {
-    // flex: 1,
-  },
-  image: {
-    // flex: 1,
-    justifyContent: "center",
+    flex: 1,
+    display: "flex",
+    position: "absolute",
+
+    bottom: 0,
+
     alignItems: "center",
+    width: screenWidth,
+    height: 549,
+    backgroundColor: "#FFF",
+    borderTopLeftRadius: 25,
+    borderTopRightRadius: 25,
   },
-  //   text: {
-  //     color: "white",
-  //     fontSize: 42,
-  //     lineHeight: 84,
-  //     fontWeight: "bold",
-  //     textAlign: "center",
-  //     backgroundColor: "#000000c0",
-  //   },
+  imgBackGround: {
+    height: screenHeight,
+    width: screenWidth,
+    //height: 812,
+  },
+  header: {
+    fontSize: 30,
+    fontWeight: "bold",
+    color: "#212121",
+
+    marginTop: 92,
+    marginBottom: 33,
+  },
+  input: {
+    height: 50,
+    width: 343,
+    marginBottom: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "#e8e8e8",
+    borderRadius: 10,
+    fontSize: 16,
+    // alignItems: "center",
+    // justifyContent: "center",
+
+    backgroundColor: "#F6F6F6",
+  },
+  styleRegistrBtn: {
+    alignItems: "center",
+    backgroundColor: "#FF6C00",
+
+    width: 343,
+    paddingTop: 16,
+    paddingBottom: 16,
+    marginTop: 27,
+    marginBottom: 16,
+    borderRadius: 32,
+  },
+  login: {
+    marginBottom: 45,
+    color: "#1B4371",
+    fontSize: 16,
+  },
+  textButton: {
+    fontSize: 16,
+  },
+  verifyButton: {
+    position: "absolute",
+    justifyContent: "center",
+    top: 14,
+    right: 16,
+  },
 });
-export default RegistrationScreen;
