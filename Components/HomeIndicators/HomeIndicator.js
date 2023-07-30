@@ -15,7 +15,7 @@ const styles = StyleSheet.create({
   homeIndicator: {
     paddingTop: 21,
     paddingBottom: 8,
-
+    alignItems: "center",
     height: 34,
   },
 });
