@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 import {
   ImageBackground,
   StyleSheet,
@@ -14,27 +15,31 @@ import {
 
 const validator = require("validator");
 
-import image from "./Images/bg_photo.jpg";
+import image from "../Screens/Images/bg_photo.jpg";
 import HomeIndicator from "../Components/HomeIndicators/HomeIndicator";
 
 const initialState = {
-  login: "",
   email: "",
   password: "",
 };
 
-const RegistrationScreen = () => {
+const LoginScreen = () => {
+  
+  const navigation = useNavigation();
+  
   const [state, setState] = useState(initialState);
 
   const [nameFocus, setNameFocus] = useState(null);
   const [isSeePaassword, setIsSeePaassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
 
-  const { login, email, password } = state;
+  const { email, password } = state;
 
   const onLogin = () => {
-    console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
+    console.log(` Email : ${email} , Password : ${password}`);
     setState(initialState);
+    navigation.navigate('Home', { screen: 'PostsScreen' });
+    //  navigation.navigate('Home');
   };
 
   const handleVisibilityPassword = () => setIsSeePaassword(!isSeePaassword);
@@ -55,21 +60,11 @@ const RegistrationScreen = () => {
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS == "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? -168 : -168}
+          keyboardVerticalOffset={Platform.OS === "ios" ? -248 : -248}
         >
           <View style={styles.formContainer}>
-            <Text style={styles.header}>Реєстрація</Text>
+            <Text style={styles.header}>Увійти</Text>
 
-            <TextInput
-              style={[styles.input, nameFocus === "login" && styles.inputFocus]}
-              placeholder="Логін"
-              value={login}
-              onChangeText={(text) =>
-                setState((prev) => ({ ...prev, login: text }))
-              }
-              onFocus={() => setNameFocus("login")}
-              onBlur={isBlurInput}
-            />
             <View>
               <TextInput
                 style={[
@@ -114,25 +109,25 @@ const RegistrationScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {login === "" ||
-            email === "" ||
-            password === "" ||
-            checkValidEmail === false ? (
+            {email === "" || password === "" || checkValidEmail === false ? (
               <TouchableOpacity disabled style={styles.styleRegistrBtn}>
-                <Text style={styles.textButton}>Зареєстуватися</Text>
+                <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={styles.styleRegistrBtn}
                 onPress={onLogin}
               >
-                <Text style={styles.textButton}>Зареєстуватися</Text>
+                <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
             )}
 
-            <TouchableOpacity>
-              <Text style={styles.registration}>Вже є акаунт? Увійти</Text>
-            </TouchableOpacity>
+            <Text style={styles.login} onPress={() => navigation.navigate("RegistrationScreen")}>
+              Немає акаунту?
+              <Text style={styles.registr}
+                onPress={() =>navigation.navigate('RegistrationScreen')
+                        }>Зареєструватися</Text>
+            </Text>
 
             <HomeIndicator />
           </View>
@@ -141,7 +136,9 @@ const RegistrationScreen = () => {
     </ImageBackground>
   );
 };
-export default RegistrationScreen;
+
+export default LoginScreen;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -150,7 +147,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   formContainer: {
-    paddingTop: 92,
+    paddingTop: 32,
     paddingBottom: 0,
 
     paddingHorizontal: 16,
@@ -203,14 +200,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 32,
   },
-  registration: {
-    marginBottom: 45,
-    color: "#1B4371",
-    fontSize: 16,
-    fontWeight: 400,
-    textAlign: "center",
-    lineHeight: 19,
-  },
+
   textButton: {
     fontSize: 16,
     color: "#FFF",
@@ -228,5 +218,17 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     bottom: 16,
     color: "red",
+  },
+  login: {
+    marginBottom: 111,
+
+    color: "#1B4371",
+    fontSize: 16,
+    fontWeight: 400,
+    textAlign: "center",
+    lineHeight: 19,
+  },
+  registr: {
+    textDecorationLine: "underline",
   },
 });

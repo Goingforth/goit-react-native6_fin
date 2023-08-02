@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 import {
   ImageBackground,
   StyleSheet,
@@ -14,26 +15,31 @@ import {
 
 const validator = require("validator");
 
-import image from "./Images/bg_photo.jpg";
+import image from "../Screens/Images/bg_photo.jpg";
 import HomeIndicator from "../Components/HomeIndicators/HomeIndicator";
 
 const initialState = {
+  login: "",
   email: "",
   password: "",
 };
 
-const LoginScreen = () => {
+const RegistrationScreen = () => {
+   const navigation = useNavigation();
+
   const [state, setState] = useState(initialState);
 
   const [nameFocus, setNameFocus] = useState(null);
   const [isSeePaassword, setIsSeePaassword] = useState(true);
   const [checkValidEmail, setCheckValidEmail] = useState(false);
 
-  const { email, password } = state;
+  const { login, email, password } = state;
 
   const onLogin = () => {
-    console.log(` Email : ${email} , Password : ${password}`);
+    console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
     setState(initialState);
+    navigation.navigate('Home', { screen: 'PostsScreen' });
+    // navigation.navigate('Home');
   };
 
   const handleVisibilityPassword = () => setIsSeePaassword(!isSeePaassword);
@@ -54,11 +60,21 @@ const LoginScreen = () => {
         <KeyboardAvoidingView
           style={styles.container}
           behavior={Platform.OS == "ios" ? "padding" : "height"}
-          keyboardVerticalOffset={Platform.OS === "ios" ? -248 : -248}
+          keyboardVerticalOffset={Platform.OS === "ios" ? -168 : -168}
         >
           <View style={styles.formContainer}>
-            <Text style={styles.header}>Увійти</Text>
+            <Text style={styles.header}>Реєстрація</Text>
 
+            <TextInput
+              style={[styles.input, nameFocus === "login" && styles.inputFocus]}
+              placeholder="Логін"
+              value={login}
+              onChangeText={(text) =>
+                setState((prev) => ({ ...prev, login: text }))
+              }
+              onFocus={() => setNameFocus("login")}
+              onBlur={isBlurInput}
+            />
             <View>
               <TextInput
                 style={[
@@ -103,22 +119,27 @@ const LoginScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {email === "" || password === "" || checkValidEmail === false ? (
+            {login === "" ||
+            email === "" ||
+            password === "" ||
+            checkValidEmail === false ? (
               <TouchableOpacity disabled style={styles.styleRegistrBtn}>
-                <Text style={styles.textButton}>Увійти</Text>
+                <Text style={styles.textButton}>Зареєстуватися</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={styles.styleRegistrBtn}
                 onPress={onLogin}
               >
-                <Text style={styles.textButton}>Увійти</Text>
+                <Text style={styles.textButton}>Зареєстуватися</Text>
               </TouchableOpacity>
             )}
 
-            <Text style={styles.login}>
-              Немає акаунту? <Text style={styles.registr}>Зареєструватися</Text>
-            </Text>
+            <TouchableOpacity >
+              <Text style={styles.registration}
+                onPress={() => navigation.navigate('LoginScreen')
+                }>Вже є акаунт? Увійти</Text>
+            </TouchableOpacity>
 
             <HomeIndicator />
           </View>
@@ -127,7 +148,9 @@ const LoginScreen = () => {
     </ImageBackground>
   );
 };
-export default LoginScreen;
+
+export default RegistrationScreen;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -136,7 +159,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   formContainer: {
-    paddingTop: 32,
+    paddingTop: 92,
     paddingBottom: 0,
 
     paddingHorizontal: 16,
@@ -189,7 +212,14 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 32,
   },
-
+  registration: {
+    marginBottom: 45,
+    color: "#1B4371",
+    fontSize: 16,
+    fontWeight: 400,
+    textAlign: "center",
+    lineHeight: 19,
+  },
   textButton: {
     fontSize: 16,
     color: "#FFF",
@@ -207,17 +237,5 @@ const styles = StyleSheet.create({
     alignSelf: "flex-end",
     bottom: 16,
     color: "red",
-  },
-  login: {
-    marginBottom: 111,
-
-    color: "#1B4371",
-    fontSize: 16,
-    fontWeight: 400,
-    textAlign: "center",
-    lineHeight: 19,
-  },
-  registr: {
-    textDecorationLine: "underline",
   },
 });
