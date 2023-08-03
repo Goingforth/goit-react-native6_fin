@@ -109,7 +109,7 @@ const LoginScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {email === "" || password === "" || checkValidEmail === false ? (
+            {/* {email === "" || password === "" || checkValidEmail === false ? (
               <TouchableOpacity disabled style={styles.styleRegistrBtn}>
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
@@ -120,7 +120,16 @@ const LoginScreen = () => {
               >
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
-            )}
+            )} */}
+
+             <TouchableOpacity
+                style={styles.styleRegistrBtn}
+                onPress={onLogin}
+              >
+                <Text style={styles.textButton}>Увійти</Text>
+              </TouchableOpacity>
+          
+
 
             <Text style={styles.login} onPress={() => navigation.navigate("RegistrationScreen")}>
               Немає акаунту?

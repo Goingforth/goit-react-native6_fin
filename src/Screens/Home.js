@@ -1,64 +1,133 @@
 // Home.js
 
-import React from "react";
-import { View, Text, StyleSheet } from "react-native";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { Ionicons } from "@expo/vector-icons";
+import React from 'react';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import { TouchableOpacity, View,StyleSheet, } from 'react-native';
 
-function Settings() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Settings!</Text>
-    </View>
-  );
-}
+import PostsScreen from '../Screens/PostsScreen';
+import CreatePostsScreen from '../Screens/CreatePostsScreen';
+import ProfileScreen from '../Screens/ProfileScreen';
 
-function Profile() {
-  return (
-    <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-      <Text>Profile!</Text>
-    </View>
-  );
-}
+import { useNavigation } from '@react-navigation/native';
+
+import { AntDesign, Feather } from '@expo/vector-icons';
 
 const Tabs = createBottomTabNavigator();
 
-const Home = () => {
+export const Home = () => {
+  const navigation = useNavigation();
+
   return (
     <Tabs.Navigator
-      screenOptions={({ route }) => ({
-        tabBarIcon: ({ focused, color, size }) => {
-          let iconName;
+      screenOptions={{
+        tabBarShowLabel: false,
+         tabBarStyle: { height: 83, justifyContent: 'center' },
+         headerTitleAlign: 'center',
 
-          if (route.name === "Profile") {
-            iconName = focused
-              ? "ios-information-circle"
-              : "ios-information-circle-outline";
-          } else if (route.name === "Settings") {
-            iconName = focused ? "ios-list-box" : "ios-list";
-          }
-          return <Ionicons name={iconName} size={size} color={color} />;
-        },
-      })}
-      tabBarOptions={{
-        activeTintColor: "tomato",
-        inactiveTintColor: "gray",
+        headerRightContainerStyle: { paddingRight: 10, paddingBottom: 10 },
+        headerLeftContainerStyle: { paddingLeft: 16, paddingBottom: 10 },
       }}
     >
-      <Tabs.Screen name="Settings" component={Settings} />
-      <Tabs.Screen name="Profile" component={Profile} />
+      <Tabs.Screen
+        name="Публікації"
+        component={PostsScreen}
+        options={{
+          headerShown: true,
+          tabBarIcon: ({ focused, size, color }) => (
+            <View style={styles.buttonNew}>
+              <Feather
+                name="grid"
+                size={24}
+                color={'#212121'}
+                strokeOpacity={0.8}
+              
+              />
+              
+            </View>
+          ),
+          headerRight: ({ focused, size, color }) => (
+            <TouchableOpacity>
+              <Feather name="log-out" size={24} color={'#BDBDBD'} />
+             
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="Створити публікацію"
+        component={CreatePostsScreen}
+        options={{
+          tabBarStyle: { display: 'none' },
+          tabBarIcon: ({ focused, size, color }) => (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                backgroundColor: '#FF6C00',
+                width: 70,
+                height: 40,
+                borderRadius: 20,
+              }}
+            >
+              <AntDesign
+                name="plus"
+                size={13}
+                color={'#FFFFFF'}
+                //fillOpacity={0.8}
+                //fill={'#FFFFFF'}
+              />
+            
+            </View>
+          ),
+          headerLeft: ({ focused, size, color }) => (
+            <TouchableOpacity >
+              <AntDesign name="arrowleft" size={24} color={color} />
+             
+            </TouchableOpacity>
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="ProfileScreen"
+        component={ProfileScreen}
+        options={{
+          headerShown: false,
+          tabBarIcon: ({ focused, size, color }) => (
+            <View
+              style={{
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: 70,
+                height: 40,
+                borderRadius: 20,
+              }}
+            >
+              <Feather
+                name="user"
+                size={24}
+                color={'#212121'}
+                stroke={focused ? '#FFFFFF' : '#212121'}
+              />
+             
+            </View>
+          ),
+        }}
+      />
     </Tabs.Navigator>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-});
+  buttonNew:{
+                justifyContent: 'center',
+                alignItems: 'center',
+            
+                width: 70,
+                height: 40,
+                borderRadius: 20,
+              }
+})
 
-export default Home;
+
 
 
