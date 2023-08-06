@@ -22,16 +22,13 @@ const PostsScreen = () => {
          }
         data={data}
         renderItem={({ item }) => (<View >
-     
-
-     
-      <View style={{marginTop:32}}>
+        <View style={{marginTop:32}}>
         <Image style={styles.postImage} source={item.image} />
             <Text style={styles.postTitle}>{item.title}</Text>
         <View style={styles.postInfo}>
           <View flexDirection = "row">
             <Feather name="message-circle" size={24} color="#BDBDBD" />
-                <Text style={styles.textViews}>{ item.views}</Text>
+                <Text style={styles.textViews}>{ item.comments}</Text>
           </View>
           <View flexDirection = "row">
             <Feather name="map-pin" size={24} color="#BDBDBD" />
@@ -55,8 +52,7 @@ export default PostsScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingLeft: 16,
-    paddingRight: 16,
+    paddingHorizontal: 16,
     paddingTop: 32,
     
     backgroundColor: '#FFFFFF',
@@ -86,8 +82,8 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   postTitle: {
-    marginTop: 8,
-    marginBottom: 8,
+    marginVertical:8,
+    
     fontSize: 16,
     lineHeight: 19,
     color: '#212121',

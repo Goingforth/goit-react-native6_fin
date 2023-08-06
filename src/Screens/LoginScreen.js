@@ -24,9 +24,9 @@ const initialState = {
 };
 
 const LoginScreen = () => {
-  
+
   const navigation = useNavigation();
-  
+
   const [state, setState] = useState(initialState);
 
   const [nameFocus, setNameFocus] = useState(null);
@@ -39,7 +39,7 @@ const LoginScreen = () => {
     console.log(` Email : ${email} , Password : ${password}`);
     setState(initialState);
     navigation.navigate('Home', { screen: 'PostsScreen' });
-    //  navigation.navigate('Home');
+
   };
 
   const handleVisibilityPassword = () => setIsSeePaassword(!isSeePaassword);
@@ -109,7 +109,7 @@ const LoginScreen = () => {
               </TouchableOpacity>
             </View>
 
-            {/* {email === "" || password === "" || checkValidEmail === false ? (
+            {email === "" || password === "" || checkValidEmail === false ? (
               <TouchableOpacity disabled style={styles.styleRegistrBtn}>
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
@@ -120,22 +120,13 @@ const LoginScreen = () => {
               >
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
-            )} */}
-
-             <TouchableOpacity
-                style={styles.styleRegistrBtn}
-                onPress={onLogin}
-              >
-                <Text style={styles.textButton}>Увійти</Text>
-              </TouchableOpacity>
-          
-
+            )}
 
             <Text style={styles.login} onPress={() => navigation.navigate("RegistrationScreen")}>
               Немає акаунту?
               <Text style={styles.registr}
-                onPress={() =>navigation.navigate('RegistrationScreen')
-                        }>Зареєструватися</Text>
+                onPress={() => navigation.navigate('RegistrationScreen')
+                }>Зареєструватися</Text>
             </Text>
 
             <HomeIndicator />
@@ -203,8 +194,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#FF6C00",
 
-    paddingTop: 16,
-    paddingBottom: 16,
+    paddingVertical: 16,
     marginTop: 27,
     marginBottom: 16,
     borderRadius: 32,

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { TouchableOpacity, View,StyleSheet, } from 'react-native';
+import { TouchableOpacity, View, StyleSheet, Image, Text, Screen } from 'react-native';
 
 import PostsScreen from '../Screens/PostsScreen';
 import CreatePostsScreen from '../Screens/CreatePostsScreen';
@@ -11,6 +11,7 @@ import ProfileScreen from '../Screens/ProfileScreen';
 import { useNavigation } from '@react-navigation/native';
 
 import { AntDesign, Feather } from '@expo/vector-icons';
+import indicator from "../Components/HomeIndicators/indicator.png"
 
 const Tabs = createBottomTabNavigator();
 
@@ -18,14 +19,23 @@ export const Home = () => {
   const navigation = useNavigation();
 
   return (
+
     <Tabs.Navigator
       screenOptions={{
         tabBarShowLabel: false,
-         tabBarStyle: { height: 83, justifyContent: 'center' },
-         headerTitleAlign: 'center',
+        tabBarStyle: {
+          height: 72, borderTopWidth: 1, borderColor: '#E5E5E5',
+        },
+        headerTitleAlign: 'center',
 
-        headerRightContainerStyle: { paddingRight: 10, paddingBottom: 10 },
-        headerLeftContainerStyle: { paddingLeft: 16, paddingBottom: 10 },
+        headerLeftContainerStyle: { paddingLeft: 16, paddingBottom: 10, paddingTop: 10, },
+        headerRightContainerStyle: { paddingRight: 10, paddingBottom: 10, paddingTop: 10, },
+
+        headerStyle: {
+          borderBottomWidth: 1,
+          borderColor: '#E5E5E5',
+
+        },
       }}
     >
       <Tabs.Screen
@@ -40,15 +50,14 @@ export const Home = () => {
                 size={24}
                 color={'#212121'}
                 strokeOpacity={0.8}
-              
               />
-              
+
             </View>
           ),
           headerRight: ({ focused, size, color }) => (
             <TouchableOpacity>
               <Feather name="log-out" size={24} color={'#BDBDBD'} />
-             
+
             </TouchableOpacity>
           ),
         }}
@@ -73,16 +82,15 @@ export const Home = () => {
                 name="plus"
                 size={13}
                 color={'#FFFFFF'}
-                //fillOpacity={0.8}
-                //fill={'#FFFFFF'}
+
               />
-            
+
             </View>
           ),
           headerLeft: ({ focused, size, color }) => (
             <TouchableOpacity >
-              <AntDesign name="arrowleft" size={24} color={color} />
-             
+              <Feather name="arrow-left" size={24} color={color} />
+
             </TouchableOpacity>
           ),
         }}
@@ -106,26 +114,29 @@ export const Home = () => {
                 name="user"
                 size={24}
                 color={'#212121'}
-                stroke={focused ? '#FFFFFF' : '#212121'}
+
               />
-             
+
             </View>
           ),
         }}
       />
+
     </Tabs.Navigator>
+
+
   );
 };
 
 const styles = StyleSheet.create({
-  buttonNew:{
-                justifyContent: 'center',
-                alignItems: 'center',
-            
-                width: 70,
-                height: 40,
-                borderRadius: 20,
-              }
+  buttonNew: {
+    justifyContent: 'center',
+    alignItems: 'center',
+
+    width: 70,
+    height: 40,
+    borderRadius: 20,
+  }
 })
 
 
