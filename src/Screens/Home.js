@@ -8,6 +8,8 @@ import PostsScreen from '../Screens/PostsScreen';
 import CreatePostsScreen from '../Screens/CreatePostsScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 
+import CommentsScreen from './CommentsScreen';
+
 import { useNavigation } from '@react-navigation/native';
 
 import { AntDesign, Feather } from '@expo/vector-icons';
@@ -39,10 +41,11 @@ export const Home = () => {
       }}
     >
       <Tabs.Screen
-        name="Публікації"
+        name="PostsScreen"
         component={PostsScreen}
         options={{
           headerShown: true,
+          title: "Публікації",
           tabBarIcon: ({ focused, size, color }) => (
             <View style={styles.buttonNew}>
               <Feather
@@ -63,10 +66,11 @@ export const Home = () => {
         }}
       />
       <Tabs.Screen
-        name="Створити публікацію"
+        name="CreatePostsScreen"
         component={CreatePostsScreen}
         options={{
           tabBarStyle: { display: 'none' },
+          title: "Створити публікацію",
           tabBarIcon: ({ focused, size, color }) => (
             <View
               style={{
@@ -88,7 +92,11 @@ export const Home = () => {
             </View>
           ),
           headerLeft: ({ focused, size, color }) => (
-            <TouchableOpacity >
+            <TouchableOpacity onPress={() =>
+              navigation.navigate('Home', { screen: 'PostsScreen' })}
+
+            >
+
               <Feather name="arrow-left" size={24} color={color} />
 
             </TouchableOpacity>
@@ -121,6 +129,26 @@ export const Home = () => {
           ),
         }}
       />
+      {/* <Tabs.Screen
+        name="CommentsScreen"
+        component={CommentsScreen}
+        options={{
+          tabBarStyle: { display: 'none' },
+          title: "Коментарі",
+
+          headerLeft: ({ focused, size, color }) => (
+            <TouchableOpacity onPress={() =>
+              navigation.navigate('Home', { screen: 'PostsScreen' })}
+
+            >
+
+              <Feather name="arrow-left" size={24} color={color} />
+
+            </TouchableOpacity>
+          ),
+        }}
+      /> */}
+
 
     </Tabs.Navigator>
 

@@ -1,89 +1,249 @@
-import React, { useState } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, ImageBackground, TextInput, } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
 
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
+import { Camera } from "expo-camera";
+import * as MediaLibrary from "expo-media-library";
+
+import { useNavigation } from '@react-navigation/native';
+//import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { FontAwesome, Feather, } from '@expo/vector-icons';
-// import { TextInput } from 'react-native-paper';
 
-const initialState = {
-  name: "Ліс",
-  geo: "Ivano-Frankivs'k Region, Ukraine",
-};
+import * as Location from "expo-location";
+import { postsTemp } from "../Data/data";
+
+import { useIsFocused } from '@react-navigation/native';/////////////
+
+
+
+
+// const initialState = {
+//   // name: "Ліс",
+//   // geo: "Ivano-Frankivs'k Region, Ukraine",
+//   name: "",
+//   geo: "",
+// };
+
 
 const CreatePostScreen = () => {
 
-  const [state, setState] = useState(initialState);
-  const { name, geo } = state;
+  const navigation = useNavigation();
+
+  const [photoName, setPhotoName] = useState('');
+  const [photoLocationName, setPhotoLocationName] = useState('');
+
+  const [hasPermission, setHasPermission] = useState(null);
+  const [cameraRef, setCameraRef] = useState(null);
+  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [postPhoto, setPostPhoto] = useState(null);
+
+  const [location, setLocation] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      let { status } = await Location.requestForegroundPermissionsAsync();
+      if (status !== "granted") {
+        console.log("Permission to access location was denied");
+      }
+
+      let location = await Location.getCurrentPositionAsync({});
+      const coords = {
+        latitude: location.coords.latitude,
+        longitude: location.coords.longitude,
+      };
+      setLocation(coords);
+    })();
+  }, []);
+
+  useEffect(() => {
+    (async () => {
+      const { status } = await Camera.requestCameraPermissionsAsync();
+      await MediaLibrary.requestPermissionsAsync();
+
+      setHasPermission(status === "granted");
+    })();
+  }, []);
+
+  if (hasPermission === null) {
+    return <View />;
+  }
+  if (hasPermission === false) {
+    return <Text>No access to camera</Text>;
+  }
+
+  const clearDataPost = () => {
+    setPhotoName('');
+    setPhotoLocationName('');
+    setPostPhoto(null);
+  };
+  // const makePhoto = async () => {
+  //   if (cameraRef.current) {
+  //     const { uri } = await cameraRef.current.takePictureAsync();
+  //     setPostPhoto(uri);
+  //   }
+
+  const handleSubmit = () => {
+
+    const newPost = {
+      image: postPhoto,
+      name: photoName,
+      comments: [],
+      likes: 0,
+      geo: photoLocationName,
+      location: location,
+    };
+
+    postsTemp.unshift(newPost);
+
+    clearDataPost();
+    navigation.navigate('PostsScreen');
+  }
+  const handleSubmitNo = () => {
+    console.log("No data post!");
+    console.log(postPhoto);
+  }
+
+  //const isFocused = useIsFocused();////////////////////////
+
   return (
-    <View style={styles.container}>
 
-      <ImageBackground resizeMode="cover" style={styles.image}
-        source={require("./Images/forest.jpg")}>
-        <TouchableOpacity style={styles.takePhoto}>
-          <FontAwesome name="camera" size={24} color="#FFF" />
-        </TouchableOpacity>
-      </ImageBackground>
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+      keyboardVerticalOffset={Platform.OS === "ios" ? -180 : -180}
+    >
+      <SafeAreaView style={styles.cont}>
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
-      <Text style={styles.signature}>Редагувати фото</Text>
+          <View style={styles.container}>
+
+            {postPhoto ? (
+              <View>
+                <Image
+                  source={{ uri: postPhoto }}
+                  style={styles.camera}
+                />
+                <Text style={styles.signature}>Редагувати фото</Text>
+              </View>
+            ) : (
+              <View>
+                <Camera style={styles.camera} type={type} ref={setCameraRef} >
 
 
-      <View style={styles.inputItem}>
-        <TextInput style={styles.input}
-          placeholder="Назва..."
-          value={name}
-        />
-      </View>
+                  <TouchableOpacity style={styles.takePhoto} onPress={async () => {
+                    if (cameraRef) {
+                      const { uri } = await cameraRef.takePictureAsync();
+                      await MediaLibrary.createAssetAsync(uri);
+                      setPostPhoto(uri);
+
+                    }
+                  }}>
+                    <FontAwesome name="camera" size={24} color="#FFF" />
+                  </TouchableOpacity>
 
 
-      <View style={{ ...styles.inputItem, marginBottom: 32 }}>
-        <View style={styles.iconGeoStyle}>
-          <Feather name='map-pin' size={24} color='#BDBDBD' />
-        </View>
-        <TextInput style={styles.input}
-          placeholder="Місцевість..."
-          value={geo} />
+                </Camera>
 
-      </View>
+                {/* {isFocused && <Camera style={styles.camera} type={type} ref={setCameraRef} isActive={true}>
 
-      <TouchableOpacity style={styles.styleRegistrBtn}>
-        <Text style={styles.textButton}>Опубліковати</Text>
-      </TouchableOpacity>
 
-      <View
-        style={{
-          alignItems: 'center',
+                  <TouchableOpacity style={styles.takePhoto} onPress={async () => {
+                    if (cameraRef) {
+                      const { uri } = await cameraRef.takePictureAsync();
+                      await MediaLibrary.createAssetAsync(uri);
+                      setPostPhoto(uri);
 
-        }}
-      >
-        <TouchableOpacity
-          style={styles.buttonDelete}>
-          <Feather name="trash-2" size={24} color="#BDBDBD" />
-        </TouchableOpacity>
-      </View>
-      <View style={styles.homeIndicator}>
-        <Image source={require("../Components/HomeIndicators/indicator.png")} />
-      </View>
-    </View>
+                    }
+                  }}>
+                    <FontAwesome name="camera" size={24} color="#FFF" />
+                  </TouchableOpacity>
+
+
+                </Camera>} */}
+                <Text style={styles.signature}>Завантажте фото</Text>
+              </View>
+            )}
+
+
+            <View style={styles.inputItem}>
+              <TextInput style={styles.input}
+                type={'text'}
+                placeholder="Назва..."
+                value={photoName}
+                onChangeText={setPhotoName}
+              />
+            </View>
+
+
+            <View style={{ ...styles.inputItem, marginBottom: 32 }}>
+              <View style={styles.iconGeoStyle}>
+                <Feather name='map-pin' size={24} color='#BDBDBD' />
+              </View>
+              <TextInput style={styles.input}
+                placeholder="Місцевість..."
+                type={'text'}
+                name={'photoLocation'}
+                value={photoLocationName}
+                onChangeText={setPhotoLocationName}
+              />
+            </View>
+
+            {photoName === "" || photoLocationName === "" || postPhoto === null ? (
+              <TouchableOpacity style={styles.styleRegistrBtn} onPress={handleSubmitNo}>
+                <Text style={styles.textButton}>Опубліковати</Text>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity style={styles.styleRegistrBtn} onPress={handleSubmit}>
+                <Text style={styles.textButton}>Опубліковати</Text>
+              </TouchableOpacity>
+            )}
+
+
+
+
+            <View
+              style={{
+                alignItems: 'center',
+
+              }}
+            >
+              <TouchableOpacity
+                style={styles.buttonDelete} onPress={clearDataPost}>
+
+                <Feather name="trash-2" size={24} color="#BDBDBD" />
+              </TouchableOpacity>
+            </View>
+            <View style={styles.homeIndicator}>
+              <Image source={require("../Components/HomeIndicators/indicator.png")} />
+            </View>
+          </View>
+        </TouchableWithoutFeedback>
+      </SafeAreaView>
+    </KeyboardAvoidingView>
 
   );
 };
 
 export default CreatePostScreen;
 const styles = StyleSheet.create({
+  cont: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,
     paddingTop: 32,
     paddingBottom: 7,
     backgroundColor: '#FFFFFF',
+    justifyContent: "flex-end",
   },
-  image: {
+  camera: {
+    width: "100%",
     height: 240,
     justifyContent: "center",
     alignItems: "center",
     marginBottom: 8,
-
+    borderRadius: 8,
   },
   takePhoto: {
     width: 60,
@@ -94,6 +254,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     opacity: 0.3,
   },
+
+
   input: {
     width: 340,
     height: 50,
@@ -145,8 +307,6 @@ const styles = StyleSheet.create({
   },
   homeIndicator: {
     alignItems: "center",
-
-
   }
 });
 

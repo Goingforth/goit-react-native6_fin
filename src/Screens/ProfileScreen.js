@@ -2,14 +2,16 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, ImageBackground, FlatList, Image, useWindowDimensions, TouchableOpacity, Dimensions, } from "react-native";
 import { Feather } from '@expo/vector-icons';
 
-import { dataProfile } from "../Data/data";
+// import { dataProfile } from "../Data/data";
+import { posts } from "../Data/data";
 
 import imageBG from "../Screens/Images/bg_photo.jpg";
 import imageUser from "../Screens/Images/userAvaProfile.jpg";
 import add from "../Screens/Images/add.png";
 
 const ProfileScreen = () => {
-  const [data, setData] = useState(dataProfile);
+  // const [data, setData] = useState(dataProfile);
+  const [data, setData] = useState(posts);
   const { height, width } = useWindowDimensions();
 
   return (
