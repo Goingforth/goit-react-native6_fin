@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, ImageBackground, FlatList, Image, useWindowDimensions, TouchableOpacity, Dimensions, } from "react-native";
 import { Feather } from '@expo/vector-icons';
 
@@ -11,6 +12,7 @@ import add from "../Screens/Images/add.png";
 
 const ProfileScreen = () => {
   // const [data, setData] = useState(dataProfile);
+  const navigation = useNavigation();
   const [data, setData] = useState(posts);
   const { height, width } = useWindowDimensions();
 
@@ -40,13 +42,17 @@ const ProfileScreen = () => {
                   <Text style={styles.postTitle}>{item.title}</Text>
                   <View style={styles.postInfo}>
                     <View flexDirection="row">
-                      <Feather name="message-circle" size={24} color="#FF6C00" />
+                      <TouchableOpacity onPress={() => navigation.navigate('CommentsScreen')} >
+                        <Feather name="message-circle" size={24} color="#FF6C00" />
+                      </TouchableOpacity>
                       <Text style={{ ...styles.textViews, marginRight: 24 }}>{item.comments}</Text>
                       <Feather name="thumbs-up" size={24} color="#FF6C00" />
                       <Text style={styles.textViews}>{item.likes}</Text>
                     </View>
                     <View flexDirection="row">
-                      <Feather name="map-pin" size={24} color="#BDBDBD" />
+                      <TouchableOpacity onPress={() => navigation.navigate('MapScreen')} >
+                        <Feather name="map-pin" size={24} color="#BDBDBD" />
+                      </TouchableOpacity>
                       <Text style={styles.textGeo}>{item.geo}</Text>
                     </View>
 

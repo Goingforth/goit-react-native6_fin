@@ -5,14 +5,14 @@ import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
 
 import { useNavigation } from '@react-navigation/native';
-//import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 
 import { FontAwesome, Feather, } from '@expo/vector-icons';
 
 import * as Location from "expo-location";
 import { postsTemp } from "../Data/data";
 
-import { useIsFocused } from '@react-navigation/native';/////////////
+
+
 
 
 
@@ -76,11 +76,7 @@ const CreatePostScreen = () => {
     setPhotoLocationName('');
     setPostPhoto(null);
   };
-  // const makePhoto = async () => {
-  //   if (cameraRef.current) {
-  //     const { uri } = await cameraRef.current.takePictureAsync();
-  //     setPostPhoto(uri);
-  //   }
+
 
   const handleSubmit = () => {
 
