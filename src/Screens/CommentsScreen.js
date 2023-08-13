@@ -12,61 +12,79 @@ const CommentsScreen = () => {
   const navigation = useNavigation();
   const [comment, setComment] = useState('');
   return (
-    <View style={styles.container}>
-      <Image style={styles.postImage} source={require('../Screens/Images/sunset.jpg')} />
-      <View style={styles.containerComments}>
-        <View style={styles.commentFull}>
 
-          <Image source={imageNoAva} />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    // keyboardVerticalOffset={Platform.OS === "ios" ? -180 : -180}
+    >
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <SafeAreaView style={styles.cont}>
 
-          <View style={styles.contentComment}>
-            <Text>Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!</Text>
-            <View style={styles.commentData}>
-              <Text style={styles.innerText}>09 червня, 2020 | 08:40</Text>
+          <View style={styles.container}>
+
+            <Image style={styles.postImage} source={require('../Screens/Images/sunset.jpg')} />
+            <View style={styles.containerComments}>
+              <View style={styles.commentFull}>
+
+                <Image source={imageNoAva} />
+
+                <View style={styles.contentComment}>
+                  <Text>Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!</Text>
+                  <View style={styles.commentData}>
+                    <Text style={styles.innerText}>09 червня, 2020 | 08:40</Text>
+                  </View>
+                </View>
+
+              </View>
+              <View style={{ ...styles.commentFull, flexDirection: "row-reverse", }}>
+                <Image source={imageAva} />
+                <View style={{ ...styles.contentComment, marginLeft: 0, marginRight: 16, }}>
+                  <Text>A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.</Text>
+                  <View style={{ ...styles.commentData, justifyContent: "flex-start", }}>
+                    <Text style={styles.innerText}>09 червня, 2020 | 09:14</Text>
+                  </View>
+                </View>
+              </View>
+              <View style={styles.commentFull}>
+                <Image source={imageNoAva} />
+                <View style={styles.contentComment}>
+                  <Text>Thank you! That was very helpful!</Text>
+                  <View style={styles.commentData}>
+                    <Text style={styles.innerText} >09 червня, 2020 | 09:20</Text>
+                  </View>
+                </View>
+              </View>
+              <View>
+                <TextInput
+                  value={comment}
+                  style={styles.input}
+                  placeholder="Коментувати..."
+                  cursorColor={'#BDBDBD'}
+                  placeholderTextColor={'#BDBDBD'}
+                ></TextInput>
+                <TouchableOpacity style={styles.sendButton} >
+                  <Image source={imageSend} />
+                </TouchableOpacity>
+              </View>
+
+
             </View>
           </View>
 
-        </View>
-        <View style={{ ...styles.commentFull, flexDirection: "row-reverse", }}>
-          <Image source={imageAva} />
-          <View style={{ ...styles.contentComment, marginLeft: 0, marginRight: 16, }}>
-            <Text>A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.</Text>
-            <View style={{ ...styles.commentData, justifyContent: "flex-start", }}>
-              <Text style={styles.innerText}>09 червня, 2020 | 09:14</Text>
-            </View>
-          </View>
-        </View>
-        <View style={styles.commentFull}>
-          <Image source={imageNoAva} />
-          <View style={styles.contentComment}>
-            <Text>Thank you! That was very helpful!</Text>
-            <View style={styles.commentData}>
-              <Text style={styles.innerText} >09 червня, 2020 | 09:20</Text>
-            </View>
-          </View>
-        </View>
-        <View>
-          <TextInput
-            value={comment}
-            style={styles.input}
-            placeholder="Коментувати..."
-            cursorColor={'#BDBDBD'}
-            placeholderTextColor={'#BDBDBD'}
-          ></TextInput>
-          <TouchableOpacity style={styles.sendButton} >
-            <Image source={imageSend} />
-          </TouchableOpacity>
-        </View>
+        </SafeAreaView>
+      </TouchableWithoutFeedback>
+    </KeyboardAvoidingView>
 
-
-      </View>
-    </View>
   );
 };
 
 export default CommentsScreen;
 
 const styles = StyleSheet.create({
+  cont: {
+    flex: 1,
+  },
   container: {
     flex: 1,
     paddingHorizontal: 16,

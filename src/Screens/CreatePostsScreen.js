@@ -11,11 +11,7 @@ import { FontAwesome, Feather, } from '@expo/vector-icons';
 import * as Location from "expo-location";
 import { postsTemp } from "../Data/data";
 
-
-
-
-
-
+//import { useIsFocused } from '@react-navigation/native';/////////////
 
 // const initialState = {
 //   // name: "Ліс",
@@ -99,7 +95,8 @@ const CreatePostScreen = () => {
     console.log(postPhoto);
   }
 
-  //const isFocused = useIsFocused();////////////////////////
+  // const isFocused = useIsFocused();////////////////////////
+
 
   return (
 
