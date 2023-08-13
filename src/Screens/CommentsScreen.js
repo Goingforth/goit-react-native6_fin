@@ -21,15 +21,29 @@ const CommentsScreen = () => {
 
           <View style={styles.contentComment}>
             <Text>Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!</Text>
+            <View style={styles.commentData}>
+              <Text style={styles.innerText}>09 червня, 2020 | 08:40</Text>
+            </View>
+          </View>
+
+        </View>
+        <View style={{ ...styles.commentFull, flexDirection: "row-reverse", }}>
+          <Image source={imageAva} />
+          <View style={{ ...styles.contentComment, marginLeft: 0, marginRight: 16, }}>
+            <Text>A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.</Text>
+            <View style={{ ...styles.commentData, justifyContent: "flex-start", }}>
+              <Text style={styles.innerText}>09 червня, 2020 | 09:14</Text>
+            </View>
           </View>
         </View>
-        <View style={{ ...styles.commentFull, flexDirection: "row-reverse", marginRight: 0, marginLeft: 16, }}>
-          <Image source={imageAva} />
-          <View style={styles.contentComment}></View>
-        </View>
-        <View style={{ ...styles.commentFull, marginBottom: 0 }}>
+        <View style={styles.commentFull}>
           <Image source={imageNoAva} />
-          <View style={styles.contentComment}></View>
+          <View style={styles.contentComment}>
+            <Text>Thank you! That was very helpful!</Text>
+            <View style={styles.commentData}>
+              <Text style={styles.innerText} >09 червня, 2020 | 09:20</Text>
+            </View>
+          </View>
         </View>
         <View>
           <TextInput
@@ -70,6 +84,7 @@ const styles = StyleSheet.create({
     flex: 1,
 
     marginTop: 32,
+    marginBottom: 32,
 
   },
   input: {
@@ -83,7 +98,7 @@ const styles = StyleSheet.create({
     borderColor: '#E8E8E8',
     borderRadius: 100,
 
-    marginTop: 32,
+
   },
   sendButton: {
     position: 'absolute',
@@ -92,8 +107,8 @@ const styles = StyleSheet.create({
   },
   commentFull: {
     flexDirection: "row",
+    overflow: 'hidden',
 
-    backgroundColor: 'green',
     marginBottom: 24,
 
     border: 1,
@@ -101,21 +116,32 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   contentComment: {
+    width: 300,
     padding: 16,
-    //  marginLeft: 16,
+    marginLeft: 16,
     backgroundColor: '#00000008',
-    backgroundColor: 'red',
+
     borderTopRightRadius: 6,
     borderBottomLeftRadius: 6,
     borderBottomRightRadius: 6,
     fontSize: 13,
     fontWeight: "regular",
-    //width: 299,
+
+  },
+  commentData: {
+    flexDirection: "row",
+
+    marginTop: 8,
+    justifyContent: "flex-end",
 
 
 
-  }
-  ,
+  },
+  innerText: {
+    color: "#BDBDBD",
+    fontSize: 10,
+
+  },
 });
 
 
