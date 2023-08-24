@@ -1,15 +1,43 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+
 import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
 
-// import { dataPostsScreen } from "../Data/data";
-import { posts } from "../Data/data";
+import { db } from "../firebase/config";
+
+import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
+
+//import { posts } from "../Data/data";
+
 import userAva from "../Screens/Images/userAva.jpg";
 const PostsScreen = () => {
   const navigation = useNavigation();
-  // const [data, setData] = useState(dataPostsScreen);
-  const [data, setData] = useState(posts);
+
+  // const [data, setData] = useState(posts);
+  const [posts, setPosts] = useState([]);
+
+  useEffect(() => {
+    const q = query(collection(db, "posts"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const newPosts = [];
+      querySnapshot.forEach((doc) => {
+
+        newPosts.push({ id: doc.id, ...doc.data().post });
+
+      });
+      const reversPosts = newPosts.reverse();
+      setPosts(reversPosts);
+    });
+
+
+  }, [])
+
+
+
+
+
+
   return (
     <SafeAreaView style={styles.container}>
       <FlatList
@@ -24,14 +52,21 @@ const PostsScreen = () => {
             </View>
           </View>
         }
-        data={data}
+        // data={data}
+        data={posts}
 
         renderItem={({ item }) => {
 
           return (<View >
             <View style={{ marginTop: 32 }}>
 
-              <Image style={styles.postImage} source={item.image} />
+
+              <Image style={{
+                resizeMode: 'cover',
+                borderRadius: 8,
+                width: "100%",
+                height: 240,
+              }} source={{ uri: `${item.image}` }} />
 
               <Text style={styles.postTitle}>{item.name}</Text>
               <View style={styles.postInfo}>

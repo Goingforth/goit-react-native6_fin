@@ -1,5 +1,10 @@
 import React, { useState } from "react";
 import { useNavigation } from '@react-navigation/native';
+import { useDispatch } from "react-redux";
+
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+
+import { updateUserProfile, viewState, authStateChange } from "../redux/auth/authSlice";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,6 +16,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 
 const validator = require("validator");
@@ -35,11 +41,31 @@ const LoginScreen = () => {
 
   const { email, password } = state;
 
-  const onLogin = () => {
-    console.log(` Email : ${email} , Password : ${password}`);
-    setState(initialState);
-    navigation.navigate('Home', { screen: 'PostsScreen' });
+  const dispatch = useDispatch();
 
+  const handleLogin = () => {
+    // console.log(` Email : ${email} , Password : ${password}`);
+    const auth = getAuth();
+    signInWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        const user = userCredential.user;
+
+
+        dispatch(updateUserProfile({
+          email: user.email,
+          login: user.displayName,
+          token: user.accessToken,
+          userId: user.uid
+        }));
+        setState(initialState);
+
+        //просмотр store в console
+        //dispatch(viewState());
+
+        // if (user.stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
+        navigation.navigate('Home', { screen: 'PostsScreen' });
+      })
+      .catch(() => Alert.alert("Invalid user"))
   };
 
   const handleVisibilityPassword = () => setIsSeePaassword(!isSeePaassword);
@@ -116,18 +142,13 @@ const LoginScreen = () => {
             ) : (
               <TouchableOpacity
                 style={styles.styleRegistrBtn}
-                onPress={onLogin}
+                onPress={handleLogin}
               >
                 <Text style={styles.textButton}>Увійти</Text>
               </TouchableOpacity>
             )}
 
-            {/* <TouchableOpacity
-              style={styles.styleRegistrBtn}
-              onPress={onLogin}
-            >
-              <Text style={styles.textButton}>Увійти</Text>
-            </TouchableOpacity> */}
+
 
             <Text style={styles.login} onPress={() => navigation.navigate("RegistrationScreen")}>
               Немає акаунту?

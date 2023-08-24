@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
+import { View, ActivityIndicator, Text, Alert, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
 
 import { Camera } from "expo-camera";
 import * as MediaLibrary from "expo-media-library";
@@ -9,16 +9,17 @@ import { useNavigation } from '@react-navigation/native';
 import { FontAwesome, Feather, } from '@expo/vector-icons';
 
 import * as Location from "expo-location";
-import { postsTemp } from "../Data/data";
+import { uploadImageAsinc } from "../firebase/upLoad";
+import * as ImagePicker from 'expo-image-picker';
 
-//import { useIsFocused } from '@react-navigation/native';/////////////
 
-// const initialState = {
-//   // name: "Ліс",
-//   // geo: "Ivano-Frankivs'k Region, Ukraine",
-//   name: "",
-//   geo: "",
-// };
+import { collection, addDoc } from "firebase/firestore";
+import { db, storage } from '../firebase/config';
+
+import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
+import { pickImage, uploadImage } from "../firebase/upLoad";
+
+
 
 
 const CreatePostScreen = () => {
@@ -31,15 +32,18 @@ const CreatePostScreen = () => {
   const [hasPermission, setHasPermission] = useState(null);
   const [cameraRef, setCameraRef] = useState(null);
   const [type, setType] = useState(Camera.Constants.Type.back);
-  const [postPhoto, setPostPhoto] = useState(null);
+
+  const [image, setImage] = useState(null); // //полній путь к файлу фото
 
   const [location, setLocation] = useState(null);
+
+  //const [isLoading, setIsloading] = useState(false);
 
   useEffect(() => {
     (async () => {
       let { status } = await Location.requestForegroundPermissionsAsync();
       if (status !== "granted") {
-        console.log("Permission to access location was denied");
+        Alert.alert("Permission to access location was denied");
       }
 
       let location = await Location.getCurrentPositionAsync({});
@@ -70,33 +74,42 @@ const CreatePostScreen = () => {
   const clearDataPost = () => {
     setPhotoName('');
     setPhotoLocationName('');
-    setPostPhoto(null);
+    setImage(null);
   };
 
+  const writeDataToFirestore = async (post) => {
+    try {
+      const docRef = await addDoc(collection(db, 'posts'), { post });
+      Alert.alert("Post written");
+    } catch (e) {
+      Alert.alert("Error adding post");
+      throw e;
+    }
+  };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+
+    const URL = await uploadImageAsinc(image);
 
     const newPost = {
-      image: postPhoto,
+      image: URL,
       name: photoName,
-      comments: [],
       likes: 0,
       geo: photoLocationName,
       location: location,
+      comments: 0,
     };
 
-    postsTemp.unshift(newPost);
+    await writeDataToFirestore(newPost);
+
 
     clearDataPost();
     navigation.navigate('PostsScreen');
   }
   const handleSubmitNo = () => {
     console.log("No data post!");
-    console.log(postPhoto);
+    console.log(image);
   }
-
-  // const isFocused = useIsFocused();////////////////////////
-
 
   return (
 
@@ -110,10 +123,10 @@ const CreatePostScreen = () => {
 
           <View style={styles.container}>
 
-            {postPhoto ? (
+            {image ? (
               <View>
                 <Image
-                  source={{ uri: postPhoto }}
+                  source={{ uri: image }}
                   style={styles.camera}
                 />
                 <Text style={styles.signature}>Редагувати фото</Text>
@@ -127,7 +140,8 @@ const CreatePostScreen = () => {
                     if (cameraRef) {
                       const { uri } = await cameraRef.takePictureAsync();
                       await MediaLibrary.createAssetAsync(uri);
-                      setPostPhoto(uri);
+                      setImage(uri);
+
 
                     }
                   }}>
@@ -137,22 +151,7 @@ const CreatePostScreen = () => {
 
                 </Camera>
 
-                {/* {isFocused && <Camera style={styles.camera} type={type} ref={setCameraRef} isActive={true}>
 
-
-                  <TouchableOpacity style={styles.takePhoto} onPress={async () => {
-                    if (cameraRef) {
-                      const { uri } = await cameraRef.takePictureAsync();
-                      await MediaLibrary.createAssetAsync(uri);
-                      setPostPhoto(uri);
-
-                    }
-                  }}>
-                    <FontAwesome name="camera" size={24} color="#FFF" />
-                  </TouchableOpacity>
-
-
-                </Camera>} */}
                 <Text style={styles.signature}>Завантажте фото</Text>
               </View>
             )}
@@ -181,7 +180,7 @@ const CreatePostScreen = () => {
               />
             </View>
 
-            {photoName === "" || photoLocationName === "" || postPhoto === null ? (
+            {photoName === "" || photoLocationName === "" || image === null ? (
               <TouchableOpacity style={styles.styleRegistrBtn} onPress={handleSubmitNo}>
                 <Text style={styles.textButton}>Опубліковати</Text>
               </TouchableOpacity>

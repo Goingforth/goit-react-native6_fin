@@ -8,17 +8,43 @@ import PostsScreen from '../Screens/PostsScreen';
 import CreatePostsScreen from '../Screens/CreatePostsScreen';
 import ProfileScreen from '../Screens/ProfileScreen';
 
+import { authSignOut, authStateChange } from "../redux/auth/authSlice";
+import { getAuth, signOut } from "firebase/auth";
+
 import CommentsScreen from './CommentsScreen';
 
 import { useNavigation } from '@react-navigation/native';
 
+import { useDispatch } from 'react-redux';
+
 import { AntDesign, Feather } from '@expo/vector-icons';
-import indicator from "../Components/HomeIndicators/indicator.png"
+
+
+
 
 const Tabs = createBottomTabNavigator();
 
 export const Home = () => {
   const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const signOutUser = () => {
+    const auth = getAuth();
+
+    signOut(auth).then(() => {
+      // dispatch(authStateChange({ stateChange: false }));
+
+      dispatch(authSignOut());
+      navigation.navigate('LoginScreen');
+
+    }).catch((error) => {
+      // An error happened.
+      alert(error)
+    });
+
+
+  };
 
   return (
 
@@ -59,7 +85,7 @@ export const Home = () => {
           ),
           headerRight: ({ focused, size, color }) => (
             <TouchableOpacity>
-              <Feather name="log-out" size={24} color={'#BDBDBD'} />
+              <Feather name="log-out" size={24} color={'#BDBDBD'} onPress={signOutUser} />
 
             </TouchableOpacity>
           ),

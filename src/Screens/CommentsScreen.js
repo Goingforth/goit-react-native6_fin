@@ -1,8 +1,22 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
+import { db } from '../firebase/config';
+import { useAuth } from "../hooks/useAuth";
 import { useNavigation } from '@react-navigation/native';
 
-import { View, Text, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
+import {
+  collection,
+  addDoc,
+  doc,
+  updateDoc,
+  setDoc,
+  Timestamp,
+} from 'firebase/firestore';
+
+import { commentDate } from '../utils/commentdate';
+
+import { View, Text, Alert, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
 
 import imageSend from "../Screens/Images/send.png";
 import imageNoAva from "../Screens/Images/noAva.png";
@@ -10,7 +24,36 @@ import imageAva from "../Screens/Images/avaComment.png";
 
 const CommentsScreen = () => {
   const navigation = useNavigation();
+  const postId = "L5NWGf7MWEnrXjg9WKDp";
   const [comment, setComment] = useState('');
+  const {
+    authState: { login, photoURL, userId },
+  } = useAuth();
+
+  const addCommentToPost = async () => {
+    const uniqueCommentId = Date.now().toString();
+
+    try {
+      const postRef = doc(db, "posts", postId, "comments", uniqueCommentId);
+
+      await setDoc(postRef, {
+        comment,
+        owner: {
+          login,
+          //avatar,
+          userId,
+        },
+        createdAt: Timestamp.fromDate(new Date()),
+        updatedAt: Timestamp.fromDate(new Date()),
+      });
+
+      Keyboard.dismiss();
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+
   return (
 
     <KeyboardAvoidingView
@@ -62,8 +105,24 @@ const CommentsScreen = () => {
                   placeholder="Коментувати..."
                   cursorColor={'#BDBDBD'}
                   placeholderTextColor={'#BDBDBD'}
+                  onChangeText={setComment}
                 ></TextInput>
-                <TouchableOpacity style={styles.sendButton} >
+                <TouchableOpacity style={styles.sendButton} onPress={() => {
+
+                  if (comment !== '') {
+                    addCommentToPost(postId, {
+                      userId,
+                      login,
+                      //photoURL,
+                      comment,
+                      commentDate: commentDate(Date.now()),
+                    });
+                    setComment('');
+                    Alert.alert("Коментар доданий.Дякую!")
+
+                  }
+                }}
+                >
                   <Image source={imageSend} />
                 </TouchableOpacity>
               </View>

@@ -1,5 +1,13 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+
+import { getAuth, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+
+import { registerDB } from "../redux/auth/operations";
+import { updateUserProfile, viewState, authStateChange } from "../redux/auth/authSlice";
+
 import { useNavigation } from '@react-navigation/native';
+import { selectStateChange } from "../redux/auth/selectors";
 import {
   ImageBackground,
   StyleSheet,
@@ -11,6 +19,7 @@ import {
   TouchableWithoutFeedback,
   KeyboardAvoidingView,
   Platform,
+  Alert,
 } from "react-native";
 
 const validator = require("validator");
@@ -25,7 +34,11 @@ const initialState = {
 };
 
 const RegistrationScreen = () => {
-   const navigation = useNavigation();
+  const navigation = useNavigation();
+
+  const dispatch = useDispatch();
+
+  const stateChange = useSelector(selectStateChange);
 
   const [state, setState] = useState(initialState);
 
@@ -35,10 +48,46 @@ const RegistrationScreen = () => {
 
   const { login, email, password } = state;
 
-  const onLogin = () => {
-    console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
+  const handleRegister = () => {
+    //console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
+
+    const auth = getAuth();
+    createUserWithEmailAndPassword(auth, email, password)
+      .then((userCredential) => {
+        // Signed in 
+        const user = userCredential.user;
+
+        dispatch(updateUserProfile({
+          email: user.email,
+          login: login,
+          token: user.accessToken,
+          userId: user.uid
+        }));
+
+        dispatch(authStateChange({ stateChange: true }));
+        //просмотр store в console
+        // dispatch(viewState());
+        updateProfile(user, {
+          displayName: login,
+        })
+
+
+      })
+      .catch((error) => {
+
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        dispatch(authStateChange({ stateChange: false }));
+        dispatch(viewState());
+        Alert.alert(error.message);
+        // ..
+      });
+
+
     setState(initialState);
-    navigation.navigate('Home', { screen: 'PostsScreen' });
+    //console.log(stateChange);
+
+    if (stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
     // navigation.navigate('Home');
   };
 
@@ -120,16 +169,16 @@ const RegistrationScreen = () => {
             </View>
 
             {login === "" ||
-            email === "" ||
-            password === "" ||
-            checkValidEmail === false ? (
+              email === "" ||
+              password === "" ||
+              checkValidEmail === false ? (
               <TouchableOpacity disabled style={styles.styleRegistrBtn}>
                 <Text style={styles.textButton}>Зареєстуватися</Text>
               </TouchableOpacity>
             ) : (
               <TouchableOpacity
                 style={styles.styleRegistrBtn}
-                onPress={onLogin}
+                onPress={handleRegister}
               >
                 <Text style={styles.textButton}>Зареєстуватися</Text>
               </TouchableOpacity>
