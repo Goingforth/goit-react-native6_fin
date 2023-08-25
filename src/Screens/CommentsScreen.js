@@ -1,9 +1,13 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import { db } from '../firebase/config';
 import { useAuth } from "../hooks/useAuth";
 import { useNavigation } from '@react-navigation/native';
+
+import { commentDate } from "../utils/commentdate";
+
+//import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
 
 import {
   collection,
@@ -12,9 +16,9 @@ import {
   updateDoc,
   setDoc,
   Timestamp,
+  query,
+  onSnapshot,
 } from 'firebase/firestore';
-
-import { commentDate } from '../utils/commentdate';
 
 import { View, Text, Alert, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
 
@@ -22,13 +26,58 @@ import imageSend from "../Screens/Images/send.png";
 import imageNoAva from "../Screens/Images/noAva.png";
 import imageAva from "../Screens/Images/avaComment.png";
 
-const CommentsScreen = () => {
+const CommentsScreen = ({ route }) => {
+  const id = route.params.id; //console.log(id);
+  const image = route.params.image; //console.log(image);
+
   const navigation = useNavigation();
-  const postId = "L5NWGf7MWEnrXjg9WKDp";
+  const postId = id;
+
+  const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
   const {
     authState: { login, photoURL, userId },
   } = useAuth();
+
+  // useEffect(() => {
+  //   const q = query(collection(db, "comments"));
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //     const newComments = [];
+  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
+  //       // console.log(querySnapshot);
+  //       // querySnapshot.forEach((doc) => {
+  //       //   console.log(doc.id);
+  //       //   // newPosts.push({ comment: doc.comment, ...doc.data().post });
+
+  //       // });
+  //       // // const reversComments = newComments.reverse();
+  //       // setComments(reversComments);
+  //     });
+
+  //     console.log(comments);
+  //   }, [])
+
+  useEffect(() => {
+    const q = query(collection(db, "posts", id, "comments"));
+    const unsubscribe = onSnapshot(q, (querySnapshot) => {
+      const newComments = [];
+
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data().comment);
+        // console.log(doc.data().timeCreation);
+        // console.log(doc.data());
+        const comment = doc.data().comment;
+        const timeCreation = doc.data().timeCreation;
+        newComments.push({ comment: comment, timeCreation: timeCreation });
+
+      });
+      // const reversComments = newComments.reverse();
+      setComments(newComments.reverse());
+
+    });
+
+
+  }, [])
 
   const addCommentToPost = async () => {
     const uniqueCommentId = Date.now().toString();
@@ -38,13 +87,15 @@ const CommentsScreen = () => {
 
       await setDoc(postRef, {
         comment,
+        timeCreation: commentDate(Date.now()),
         owner: {
           login,
           //avatar,
           userId,
+
         },
-        createdAt: Timestamp.fromDate(new Date()),
-        updatedAt: Timestamp.fromDate(new Date()),
+        // createdAt: Timestamp.fromDate(new Date()),
+        // updatedAt: Timestamp.fromDate(new Date()),
       });
 
       Keyboard.dismiss();
@@ -65,8 +116,12 @@ const CommentsScreen = () => {
         <SafeAreaView style={styles.cont}>
 
           <View style={styles.container}>
-
-            <Image style={styles.postImage} source={require('../Screens/Images/sunset.jpg')} />
+            <Image style={{
+              resizeMode: 'cover',
+              borderRadius: 8,
+              width: "100%",
+              height: 240,
+            }} source={{ uri: `${image}` }} />
             <View style={styles.containerComments}>
               <View style={styles.commentFull}>
 
@@ -115,7 +170,7 @@ const CommentsScreen = () => {
                       login,
                       //photoURL,
                       comment,
-                      commentDate: commentDate(Date.now()),
+
                     });
                     setComment('');
                     Alert.alert("Коментар доданий.Дякую!")

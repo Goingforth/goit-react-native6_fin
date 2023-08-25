@@ -13,8 +13,6 @@ import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/fi
 import userAva from "../Screens/Images/userAva.jpg";
 const PostsScreen = () => {
   const navigation = useNavigation();
-
-  // const [data, setData] = useState(posts);
   const [posts, setPosts] = useState([]);
 
   useEffect(() => {
@@ -24,10 +22,9 @@ const PostsScreen = () => {
       querySnapshot.forEach((doc) => {
 
         newPosts.push({ id: doc.id, ...doc.data().post });
-
       });
-      const reversPosts = newPosts.reverse();
-      setPosts(reversPosts);
+
+      setPosts(newPosts.reverse());
     });
 
 
@@ -72,7 +69,9 @@ const PostsScreen = () => {
               <View style={styles.postInfo}>
                 <View flexDirection="row">
 
-                  <TouchableOpacity onPress={() => navigation.navigate('CommentsScreen')} >
+                  <TouchableOpacity onPress={() => navigation.navigate('CommentsScreen', {
+                    id: item.id, image: item.image
+                  })} >
                     <Feather name="message-circle" size={24} color="#BDBDBD" />
 
                   </TouchableOpacity>
