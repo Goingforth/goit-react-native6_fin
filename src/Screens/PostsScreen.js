@@ -24,7 +24,8 @@ const PostsScreen = () => {
         newPosts.push({ id: doc.id, ...doc.data().post });
       });
 
-      setPosts(newPosts.reverse());
+      const reversePosts = newPosts.reverse();
+      setPosts(reversePosts);
     });
 
 

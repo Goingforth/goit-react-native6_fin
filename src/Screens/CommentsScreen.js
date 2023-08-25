@@ -63,16 +63,13 @@ const CommentsScreen = ({ route }) => {
       const newComments = [];
 
       querySnapshot.forEach((doc) => {
-        // console.log(doc.data().comment);
-        // console.log(doc.data().timeCreation);
-        // console.log(doc.data());
+
         const comment = doc.data().comment;
         const timeCreation = doc.data().timeCreation;
         newComments.push({ comment: comment, timeCreation: timeCreation });
 
       });
-      // const reversComments = newComments.reverse();
-      setComments(newComments.reverse());
+      setComments(newComments);
 
     });
 
@@ -113,17 +110,20 @@ const CommentsScreen = ({ route }) => {
     // keyboardVerticalOffset={Platform.OS === "ios" ? -180 : -180}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        <SafeAreaView style={styles.cont}>
+        {/* <SafeAreaView style={styles.cont}> */}
 
-          <View style={styles.container}>
-            <Image style={{
-              resizeMode: 'cover',
-              borderRadius: 8,
-              width: "100%",
-              height: 240,
-            }} source={{ uri: `${image}` }} />
-            <View style={styles.containerComments}>
-              <View style={styles.commentFull}>
+
+        <View style={styles.container}>
+          <Image style={{
+            resizeMode: 'cover',
+            borderRadius: 8,
+            width: "100%",
+            height: 240,
+          }} source={{ uri: `${image}` }} />
+
+
+          <View style={styles.containerComments}>
+            {/* <View style={styles.commentFull}>
 
                 <Image source={imageNoAva} />
 
@@ -152,41 +152,43 @@ const CommentsScreen = ({ route }) => {
                     <Text style={styles.innerText} >09 червня, 2020 | 09:20</Text>
                   </View>
                 </View>
-              </View>
-              <View>
-                <TextInput
-                  value={comment}
-                  style={styles.input}
-                  placeholder="Коментувати..."
-                  cursorColor={'#BDBDBD'}
-                  placeholderTextColor={'#BDBDBD'}
-                  onChangeText={setComment}
-                ></TextInput>
-                <TouchableOpacity style={styles.sendButton} onPress={() => {
-
-                  if (comment !== '') {
-                    addCommentToPost(postId, {
-                      userId,
-                      login,
-                      //photoURL,
-                      comment,
-
-                    });
-                    setComment('');
-                    Alert.alert("Коментар доданий.Дякую!")
-
-                  }
-                }}
-                >
-                  <Image source={imageSend} />
-                </TouchableOpacity>
-              </View>
+              </View> */}
 
 
-            </View>
           </View>
 
-        </SafeAreaView>
+          <View style={styles.inputComment}>
+            <TextInput
+              value={comment}
+              style={styles.input}
+              placeholder="Коментувати..."
+              cursorColor={'#BDBDBD'}
+              placeholderTextColor={'#BDBDBD'}
+              onChangeText={setComment}
+            ></TextInput>
+            <TouchableOpacity style={styles.sendButton} onPress={() => {
+
+              if (comment !== '') {
+                addCommentToPost(postId, {
+                  userId,
+                  login,
+                  //photoURL,
+                  comment,
+
+                });
+                setComment('');
+                Alert.alert("Коментар доданий.Дякую!")
+
+              }
+            }}
+            >
+              <Image source={imageSend} />
+            </TouchableOpacity>
+          </View>
+
+        </View>
+
+        {/* </SafeAreaView> */}
       </TouchableWithoutFeedback>
     </KeyboardAvoidingView>
 
@@ -274,6 +276,15 @@ const styles = StyleSheet.create({
     fontSize: 10,
 
   },
+  inputComment: {
+    // position: "absolute",
+    // position: "relative",
+    // bottom: 16,
+    width: "100%",
+    // left: 16,
+    // right: 16,
+
+  }
 });
 
 
