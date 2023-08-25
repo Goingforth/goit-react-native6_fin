@@ -59,8 +59,7 @@ const LoginScreen = () => {
         }));
         setState(initialState);
 
-        //просмотр store в console
-        //dispatch(viewState());
+
 
         // if (user.stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
         navigation.navigate('Home', { screen: 'PostsScreen' });

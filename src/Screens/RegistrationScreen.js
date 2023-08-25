@@ -49,7 +49,7 @@ const RegistrationScreen = () => {
   const { login, email, password } = state;
 
   const handleRegister = () => {
-    //console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
+    console.log(`Login : ${login} , Email : ${email} , Password : ${password}`);
 
     const auth = getAuth();
     createUserWithEmailAndPassword(auth, email, password)
@@ -65,8 +65,7 @@ const RegistrationScreen = () => {
         }));
 
         dispatch(authStateChange({ stateChange: true }));
-        //просмотр store в console
-        // dispatch(viewState());
+
         updateProfile(user, {
           displayName: login,
         })
@@ -85,10 +84,10 @@ const RegistrationScreen = () => {
 
 
     setState(initialState);
-    //console.log(stateChange);
+
 
     if (stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
-    // navigation.navigate('Home');
+
   };
 
   const handleVisibilityPassword = () => setIsSeePaassword(!isSeePaassword);

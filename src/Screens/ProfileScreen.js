@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { View, Text, StyleSheet, ImageBackground, FlatList, Image, useWindowDimensions, TouchableOpacity, Dimensions, } from "react-native";
 import { Feather } from '@expo/vector-icons';
 
-// import { dataProfile } from "../Data/data";
+
 import { posts } from "../Data/data";
 
 import imageBG from "../Screens/Images/bg_photo.jpg";

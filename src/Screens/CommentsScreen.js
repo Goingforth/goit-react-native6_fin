@@ -7,6 +7,8 @@ import { useNavigation } from '@react-navigation/native';
 
 import { commentDate } from "../utils/commentdate";
 
+import uuid from 'react-native-uuid';
+
 //import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
 
 import {
@@ -20,7 +22,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore';
 
-import { View, Text, Alert, StyleSheet, Image, TouchableOpacity, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
+import { View, Text, Alert, StyleSheet, Image, TouchableOpacity, FlatList, TextInput, KeyboardAvoidingView, TouchableWithoutFeedback, Keyboard, SafeAreaView } from "react-native";
 
 import imageSend from "../Screens/Images/send.png";
 import imageNoAva from "../Screens/Images/noAva.png";
@@ -39,23 +41,6 @@ const CommentsScreen = ({ route }) => {
     authState: { login, photoURL, userId },
   } = useAuth();
 
-  // useEffect(() => {
-  //   const q = query(collection(db, "comments"));
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //     const newComments = [];
-  //     const unsubscribe = onSnapshot(q, (querySnapshot) => {
-  //       // console.log(querySnapshot);
-  //       // querySnapshot.forEach((doc) => {
-  //       //   console.log(doc.id);
-  //       //   // newPosts.push({ comment: doc.comment, ...doc.data().post });
-
-  //       // });
-  //       // // const reversComments = newComments.reverse();
-  //       // setComments(reversComments);
-  //     });
-
-  //     console.log(comments);
-  //   }, [])
 
   useEffect(() => {
     const q = query(collection(db, "posts", id, "comments"));
@@ -66,7 +51,7 @@ const CommentsScreen = ({ route }) => {
 
         const comment = doc.data().comment;
         const timeCreation = doc.data().timeCreation;
-        newComments.push({ comment: comment, timeCreation: timeCreation });
+        newComments.push({ id: uuid.v4(), comment: comment, timeCreation: timeCreation });
 
       });
       setComments(newComments);
@@ -86,6 +71,7 @@ const CommentsScreen = ({ route }) => {
         comment,
         timeCreation: commentDate(Date.now()),
         owner: {
+          id,
           login,
           //avatar,
           userId,
@@ -110,10 +96,7 @@ const CommentsScreen = ({ route }) => {
     // keyboardVerticalOffset={Platform.OS === "ios" ? -180 : -180}
     >
       <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-        {/* <SafeAreaView style={styles.cont}> */}
-
-
-        <View style={styles.container}>
+        <SafeAreaView style={styles.container}>
           <Image style={{
             resizeMode: 'cover',
             borderRadius: 8,
@@ -122,39 +105,37 @@ const CommentsScreen = ({ route }) => {
           }} source={{ uri: `${image}` }} />
 
 
-          <View style={styles.containerComments}>
-            {/* <View style={styles.commentFull}>
+          <View style={{ flex: 1 }}>
+            <FlatList
 
-                <Image source={imageNoAva} />
+              data={comments}
 
-                <View style={styles.contentComment}>
-                  <Text>Really love your most recent photo. I’ve been trying to capture the same thing for a few months and would love some tips!</Text>
-                  <View style={styles.commentData}>
-                    <Text style={styles.innerText}>09 червня, 2020 | 08:40</Text>
-                  </View>
-                </View>
+              contentContainerStyle={{
+                flexGrow: 1,
+              }}
 
-              </View>
-              <View style={{ ...styles.commentFull, flexDirection: "row-reverse", }}>
-                <Image source={imageAva} />
-                <View style={{ ...styles.contentComment, marginLeft: 0, marginRight: 16, }}>
-                  <Text>A fast 50mm like f1.8 would help with the bokeh. I’ve been using primes as they tend to get a bit sharper images.</Text>
-                  <View style={{ ...styles.commentData, justifyContent: "flex-start", }}>
-                    <Text style={styles.innerText}>09 червня, 2020 | 09:14</Text>
-                  </View>
-                </View>
-              </View>
-              <View style={styles.commentFull}>
-                <Image source={imageNoAva} />
-                <View style={styles.contentComment}>
-                  <Text>Thank you! That was very helpful!</Text>
-                  <View style={styles.commentData}>
-                    <Text style={styles.innerText} >09 червня, 2020 | 09:20</Text>
-                  </View>
-                </View>
-              </View> */}
+              renderItem={({ item }) => {
 
+                return (
+                  <>
+                    <View style={{ marginTop: 32 }}>
 
+                      <View style={styles.commentFull}>
+                        <Image source={imageNoAva} />
+                        <View style={styles.contentComment}>
+                          <Text>{item.comment}</Text>
+                          <View style={styles.commentData}>
+                            <Text style={styles.innerText} >{item.timeCreation}</Text>
+                          </View>
+                        </View>
+                      </View>
+
+                    </View>
+                  </>
+                )
+              }}
+              keyExtractor={(item) => item.id}
+            />
           </View>
 
           <View style={styles.inputComment}>
@@ -186,11 +167,11 @@ const CommentsScreen = ({ route }) => {
             </TouchableOpacity>
           </View>
 
-        </View>
+          {/* </View> */}
 
-        {/* </SafeAreaView> */}
+        </SafeAreaView>
       </TouchableWithoutFeedback>
-    </KeyboardAvoidingView>
+    </KeyboardAvoidingView >
 
   );
 };
@@ -199,7 +180,7 @@ export default CommentsScreen;
 
 const styles = StyleSheet.create({
   cont: {
-    flex: 1,
+    // flex: 1,
   },
   container: {
     flex: 1,
@@ -215,7 +196,7 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   containerComments: {
-    flex: 1,
+    // flex: 1,
 
     marginTop: 32,
     marginBottom: 32,
