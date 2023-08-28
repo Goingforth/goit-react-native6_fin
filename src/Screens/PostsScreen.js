@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 
 import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
@@ -15,19 +16,62 @@ const PostsScreen = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
 
-  useEffect(() => {
-    const q = query(collection(db, "posts"));
-    const unsubscribe = onSnapshot(q, (querySnapshot) => {
-      const newPosts = [];
-      querySnapshot.forEach((doc) => {
 
-        newPosts.push({ id: doc.id, ...doc.data().post });
+  const getDataFromFirestore = (callback) => {
+    return onSnapshot(collection(db, 'posts'), (snapshot) => {
+      const newData = [];
+      snapshot.forEach((doc) => {
+        const data = doc.data().post;
+        const id = doc.id;
+        const commentsRef = collection(db, 'posts', id, 'comments');
+        getDocs(commentsRef).then((commentsSnapshot) => {
+          const commentsCount = commentsSnapshot.size;
+          newData.push({ id, ...data, commentsCount });
+          if (newData.length === snapshot.size) {
+            callback(newData);
+          }
+        });
       });
+    });
+  };
 
-      const reversePosts = newPosts.reverse();
-      setPosts(reversePosts);
+  // useEffect(() => {
+  //   const q = query(collection(db, "posts"));
+  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {//start
+  //     const newPosts = [];
+  //     querySnapshot.forEach((doc) => {
+  //       const data = doc.data();
+  //       const id = doc.id;
+
+  //       const commentsRef = collection(db, 'posts', id, 'comments');
+  //       getDocs(commentsRef).then((commentsSnapshot) => {
+  //         const commentsCount = commentsSnapshot.size;
+  //         // console.log(commentsCount);
+  //         newPosts.push({ id, ...data, commentsCount });
+  //         // console.log(newPosts);
+  //       });
+  //       //newPosts.push({ id, ...data });
+  //     });
+
+
+  //     //////////////////////////
+
+  //     const reversePosts = newPosts.reverse();
+
+  //     setPosts(reversePosts);
+  //     console.log(posts);
+  //   });
+  // }, [])
+  useEffect(() => {
+    const unsubscribe = getDataFromFirestore((newData) => {
+      setPosts(newData);
+
+
     });
 
+    return () => {
+      unsubscribe();
+    };
 
   }, [])
 
@@ -50,8 +94,8 @@ const PostsScreen = () => {
             </View>
           </View>
         }
-        // data={data}
-        data={posts}
+        data={unsubscribe}
+        // data={posts}
 
         renderItem={({ item }) => {
 
@@ -76,7 +120,7 @@ const PostsScreen = () => {
                     <Feather name="message-circle" size={24} color="#BDBDBD" />
 
                   </TouchableOpacity>
-                  <Text style={styles.textViews}>{item.comments}</Text>
+                  <Text style={styles.textViews}>{item.commentsCount}</Text>
 
                 </View>
                 <View flexDirection="row">
