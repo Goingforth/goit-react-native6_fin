@@ -1,5 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+//import { selectorNewComment } from "../redux/selectors";
+
+import { newComment } from "../redux/comment/commentSlice";
 
 import { db } from '../firebase/config';
 import { useAuth } from "../hooks/useAuth";
@@ -9,7 +12,6 @@ import { commentDate } from "../utils/commentdate";
 
 import uuid from 'react-native-uuid';
 
-//import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
 
 import {
   collection,
@@ -29,17 +31,22 @@ import imageNoAva from "../Screens/Images/noAva.png";
 import imageAva from "../Screens/Images/avaComment.png";
 
 const CommentsScreen = ({ route }) => {
-  const id = route.params.id; //console.log(id);
-  const image = route.params.image; //console.log(image);
+
+  const id = route.params.id;
+  const image = route.params.image;
 
   const navigation = useNavigation();
   const postId = id;
 
   const [comments, setComments] = useState([]);
   const [comment, setComment] = useState('');
+
+  const dispatch = useDispatch()
   const {
     authState: { login, photoURL, userId },
   } = useAuth();
+
+
 
 
   useEffect(() => {
@@ -158,6 +165,7 @@ const CommentsScreen = ({ route }) => {
 
                 });
                 setComment('');
+                dispatch(newComment(comment));
                 Alert.alert("Коментар доданий.Дякую!")
 
               }

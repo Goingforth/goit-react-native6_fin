@@ -13,7 +13,8 @@ import {
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { authSlice } from './auth/authSlice';
-//import { postSlice } from './posts/postsSlice';
+import { commentReducer, commentSlice } from './comment/commentSlice';
+
 
 const persistConfig = {
     key: 'auth',
@@ -23,7 +24,8 @@ const persistConfig = {
 
 const rootReducer = combineReducers({
     [authSlice.name]: persistReducer(persistConfig, authSlice.reducer),
-    // [postSlice.name]: postSlice.reducer,
+    [commentSlice.name]: commentReducer,
+
 });
 
 const store = configureStore({

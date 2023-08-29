@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
+import { selectorNewComment } from "../redux/selectors";
+
 import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
 import { Feather } from '@expo/vector-icons';
@@ -10,13 +12,24 @@ import { db } from "../firebase/config";
 import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
 
 import userAva from "../Screens/Images/userAva.jpg";
+
+// import {
+//   selectorStateComment,
+
+// } from "../../redux/selectors";
+
 const PostsScreen = () => {
   const navigation = useNavigation();
   const [posts, setPosts] = useState([]);
 
+  const newComment = useSelector(selectorNewComment);
+
+
 
   const getDataFromFirestore = (callback) => {
+    // const comment = useSelector(selectorStateComment); ///////new
     return onSnapshot(collection(db, 'posts'), (snapshot) => {
+
       const newData = [];
       snapshot.forEach((doc) => {
         const data = doc.data().post;
@@ -71,8 +84,9 @@ const PostsScreen = () => {
     //   unsubscribe();
     // };
 
-  }, [])
+  }, [navigation, newComment]) ///new
 
+  // }, [])
 
 
 
