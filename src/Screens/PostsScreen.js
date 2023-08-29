@@ -9,8 +9,6 @@ import { db } from "../firebase/config";
 
 import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/firestore";
 
-//import { posts } from "../Data/data";
-
 import userAva from "../Screens/Images/userAva.jpg";
 const PostsScreen = () => {
   const navigation = useNavigation();
@@ -69,9 +67,9 @@ const PostsScreen = () => {
 
     });
 
-    return () => {
-      unsubscribe();
-    };
+    // return () => {
+    //   unsubscribe();
+    // };
 
   }, [])
 
@@ -94,8 +92,8 @@ const PostsScreen = () => {
             </View>
           </View>
         }
-        data={unsubscribe}
-        // data={posts}
+        //data={unsubscribe}
+        data={posts}
 
         renderItem={({ item }) => {
 
@@ -124,7 +122,7 @@ const PostsScreen = () => {
 
                 </View>
                 <View flexDirection="row">
-                  <TouchableOpacity onPress={() => navigation.navigate('MapScreen')} >
+                  <TouchableOpacity onPress={() => navigation.navigate('MapScreen', { latitude: item.location.latitude, longitude: item.location.longitude })} >
                     <Feather name="map-pin" size={24} color="#BDBDBD" />
                   </TouchableOpacity>
 
