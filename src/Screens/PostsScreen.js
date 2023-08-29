@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { selectorNewComment } from "../redux/selectors";
+import { selectorNewComment } from "../redux/comment/selectors";
 
 import { View, Text, StyleSheet, Image, FlatList, SafeAreaView, TouchableOpacity } from "react-native";
 import { useNavigation } from '@react-navigation/native';
@@ -13,10 +13,7 @@ import { doc, onSnapshot, getDocs, collection, query, where, } from "firebase/fi
 
 import userAva from "../Screens/Images/userAva.jpg";
 
-// import {
-//   selectorStateComment,
 
-// } from "../../redux/selectors";
 
 const PostsScreen = () => {
   const navigation = useNavigation();
@@ -27,7 +24,7 @@ const PostsScreen = () => {
 
 
   const getDataFromFirestore = (callback) => {
-    // const comment = useSelector(selectorStateComment); ///////new
+
     return onSnapshot(collection(db, 'posts'), (snapshot) => {
 
       const newData = [];
@@ -46,33 +43,6 @@ const PostsScreen = () => {
     });
   };
 
-  // useEffect(() => {
-  //   const q = query(collection(db, "posts"));
-  //   const unsubscribe = onSnapshot(q, (querySnapshot) => {//start
-  //     const newPosts = [];
-  //     querySnapshot.forEach((doc) => {
-  //       const data = doc.data();
-  //       const id = doc.id;
-
-  //       const commentsRef = collection(db, 'posts', id, 'comments');
-  //       getDocs(commentsRef).then((commentsSnapshot) => {
-  //         const commentsCount = commentsSnapshot.size;
-  //         // console.log(commentsCount);
-  //         newPosts.push({ id, ...data, commentsCount });
-  //         // console.log(newPosts);
-  //       });
-  //       //newPosts.push({ id, ...data });
-  //     });
-
-
-  //     //////////////////////////
-
-  //     const reversePosts = newPosts.reverse();
-
-  //     setPosts(reversePosts);
-  //     console.log(posts);
-  //   });
-  // }, [])
   useEffect(() => {
     const unsubscribe = getDataFromFirestore((newData) => {
       setPosts(newData);
@@ -80,17 +50,9 @@ const PostsScreen = () => {
 
     });
 
-    // return () => {
-    //   unsubscribe();
-    // };
-
-  }, [navigation, newComment]) ///new
-
-  // }, [])
 
 
-
-
+  }, [navigation, newComment])
 
   return (
     <SafeAreaView style={styles.container}>
@@ -106,7 +68,7 @@ const PostsScreen = () => {
             </View>
           </View>
         }
-        //data={unsubscribe}
+
         data={posts}
 
         renderItem={({ item }) => {

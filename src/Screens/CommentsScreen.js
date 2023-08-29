@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { useSelector, useDispatch } from "react-redux";
-//import { selectorNewComment } from "../redux/selectors";
+import { useDispatch } from "react-redux";
+
 
 import { newComment } from "../redux/comment/commentSlice";
 
@@ -266,12 +266,8 @@ const styles = StyleSheet.create({
 
   },
   inputComment: {
-    // position: "absolute",
-    // position: "relative",
-    // bottom: 16,
+
     width: "100%",
-    // left: 16,
-    // right: 16,
 
   }
 });
