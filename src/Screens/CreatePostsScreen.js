@@ -52,6 +52,7 @@ const CreatePostScreen = () => {
         longitude: location.coords.longitude,
       };
       setLocation(coords);
+
     })();
   }, []);
 
