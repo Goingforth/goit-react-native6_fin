@@ -1,10 +1,16 @@
 import React from "react";
 import 'react-native-gesture-handler';
 
+import { useEffect, useState } from 'react';
+import { useDispatch } from 'react-redux';
+
+import { useAuth } from '../hooks/useAuth';
+import { authStateChangeUser } from '../redux/auth/operations';
+
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 
-// import { useDispatch } from 'react-redux';
+
 
 import LoginScreen from '../Screens/LoginScreen';
 import RegistrationScreen from '../Screens/RegistrationScreen';
@@ -21,14 +27,25 @@ export default function Main() {
 
     const MainStack = createStackNavigator();
 
-    // const dispatch = useDispatch();
+    const dispatch = useDispatch();
+    const {
+        authState: { stateChange },
+    } = useAuth();
+    // useEffect(() => {
+    //     dispatch(authStateChangeUser());
+    // }, []);
+
+    console.log("Main :", stateChange);
 
     return (
         <NavigationContainer>
+
             <MainStack.Navigator
+                // initialRouteName={stateChange ? "PostsScreen" : "LoginScreen"}
                 initialRouteName="LoginScreen"
                 screenOptions={{ headerShown: false }}
             >
+
                 <MainStack.Screen
                     name="RegistrationScreen"
                     component={RegistrationScreen}

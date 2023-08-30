@@ -59,9 +59,9 @@ const LoginScreen = () => {
         }));
         setState(initialState);
 
-
-
-        // if (user.stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
+        dispatch(authStateChange({ stateChange: true }));
+        // console.log(user.stateChange);
+        //if (user.stateChange) { navigation.navigate('Home', { screen: 'PostsScreen' }) };
         navigation.navigate('Home', { screen: 'PostsScreen' });
       })
       .catch(() => Alert.alert("Invalid user"))
