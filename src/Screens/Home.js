@@ -33,8 +33,6 @@ export const Home = () => {
     const auth = getAuth();
 
     signOut(auth).then(() => {
-      // dispatch(authStateChange({ stateChange: false }));
-
       dispatch(authSignOut());
       navigation.navigate('LoginScreen');
 

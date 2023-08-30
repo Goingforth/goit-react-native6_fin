@@ -1,11 +1,9 @@
 import React from "react";
 import 'react-native-gesture-handler';
 
-import { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import { useAuth } from '../hooks/useAuth';
-import { authStateChangeUser } from '../redux/auth/operations';
 
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -31,72 +29,126 @@ export default function Main() {
     const {
         authState: { stateChange },
     } = useAuth();
-    // useEffect(() => {
-    //     dispatch(authStateChangeUser());
-    // }, []);
-
-    console.log("Main :", stateChange);
 
     return (
         <NavigationContainer>
+            {!stateChange ? (
+                <MainStack.Navigator
 
-            <MainStack.Navigator
-                // initialRouteName={stateChange ? "PostsScreen" : "LoginScreen"}
-                initialRouteName="LoginScreen"
-                screenOptions={{ headerShown: false }}
-            >
+                    initialRouteName="LoginScreen"
+                    screenOptions={{ headerShown: false }}
+                >
 
-                <MainStack.Screen
-                    name="RegistrationScreen"
-                    component={RegistrationScreen}
-                />
-                <MainStack.Screen name="LoginScreen" component={LoginScreen} />
-                <MainStack.Screen name="Home" component={Home} />
-                <MainStack.Screen name="CreatePostsScreen" component={CreatePostsScreen} />
-                <MainStack.Screen name="ProfileScreen" component={ProfileScreen} />
-                <MainStack.Screen name="PostsScreen" component={PostsScreen} />
-                <MainStack.Screen
-                    name="CommentsScreen"
-                    component={CommentsScreen}
-                    options={{
-                        headerShown: true,
-                        headerTitleAlign: 'center',
-                        title: "Коментарі",
-                        headerStyle: {
-                            backgroundColor: '#fff',
+                    <MainStack.Screen
+                        name="RegistrationScreen"
+                        component={RegistrationScreen}
+                    />
+                    <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+                    <MainStack.Screen name="Home" component={Home} />
+                    <MainStack.Screen name="CreatePostsScreen" component={CreatePostsScreen} />
+                    <MainStack.Screen name="ProfileScreen" component={ProfileScreen} />
+                    <MainStack.Screen name="PostsScreen" component={PostsScreen} />
+                    <MainStack.Screen
+                        name="CommentsScreen"
+                        component={CommentsScreen}
+                        options={{
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            title: "Коментарі",
+                            headerStyle: {
+                                backgroundColor: '#fff',
 
-                        },
-                        headerTintColor: '#212121',
+                            },
+                            headerTintColor: '#212121',
 
-                        headerTitleStyle: {
-                            fontWeight: 'medium',
-                            fontSize: 17,
+                            headerTitleStyle: {
+                                fontWeight: 'medium',
+                                fontSize: 17,
 
-                        },
-                    }}
-                />
-                <MainStack.Screen
-                    name="MapScreen"
-                    component={MapScreen}
-                    options={{
-                        headerShown: true,
-                        headerTitleAlign: 'center',
-                        title: "Карта",
-                        headerStyle: {
-                            backgroundColor: '#fff',
+                            },
+                        }}
+                    />
+                    <MainStack.Screen
+                        name="MapScreen"
+                        component={MapScreen}
+                        options={{
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            title: "Карта",
+                            headerStyle: {
+                                backgroundColor: '#fff',
 
-                        },
-                        headerTintColor: '#212121',
+                            },
+                            headerTintColor: '#212121',
 
-                        headerTitleStyle: {
-                            fontWeight: 'medium',
-                            fontSize: 17,
+                            headerTitleStyle: {
+                                fontWeight: 'medium',
+                                fontSize: 17,
 
-                        },
-                    }}
-                />
+                            },
+                        }}
+                    />
 
-            </MainStack.Navigator>
+                </MainStack.Navigator>
+            ) : (
+                <MainStack.Navigator
+                    initialRouteName="Home"
+                    screenOptions={{ headerShown: false }}
+                >
+
+                    <MainStack.Screen
+                        name="RegistrationScreen"
+                        component={RegistrationScreen}
+                    />
+                    <MainStack.Screen name="LoginScreen" component={LoginScreen} />
+                    <MainStack.Screen name="Home" component={Home} />
+                    <MainStack.Screen name="CreatePostsScreen" component={CreatePostsScreen} />
+                    <MainStack.Screen name="ProfileScreen" component={ProfileScreen} />
+                    <MainStack.Screen name="PostsScreen" component={PostsScreen} />
+                    <MainStack.Screen
+                        name="CommentsScreen"
+                        component={CommentsScreen}
+                        options={{
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            title: "Коментарі",
+                            headerStyle: {
+                                backgroundColor: '#fff',
+
+                            },
+                            headerTintColor: '#212121',
+
+                            headerTitleStyle: {
+                                fontWeight: 'medium',
+                                fontSize: 17,
+
+                            },
+                        }}
+                    />
+                    <MainStack.Screen
+                        name="MapScreen"
+                        component={MapScreen}
+                        options={{
+                            headerShown: true,
+                            headerTitleAlign: 'center',
+                            title: "Карта",
+                            headerStyle: {
+                                backgroundColor: '#fff',
+
+                            },
+                            headerTintColor: '#212121',
+
+                            headerTitleStyle: {
+                                fontWeight: 'medium',
+                                fontSize: 17,
+
+                            },
+                        }}
+                    />
+
+                </MainStack.Navigator>
+            )}
+
         </NavigationContainer>
     );
 }
